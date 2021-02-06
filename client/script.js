@@ -110,7 +110,7 @@ function getTodo () {
               <div class="card-body">
                 <h5 class="card-title">${el.title}</h5>
                 <p class="card-text">${el.description}</p>
-                <input type="checkbox" checked="" id="status-138" onclick="changeStatus(${el.id}, 'unfinished')"> done todo
+                <input type="checkbox" checked="" id="status" onclick="changeStatus(${el.id})"> done todo
                 <p class="card-text">${el.due_date.split("T")[0]}</p>
                 <a href="#" class="btn btn-primary" onclick="findTodo(${el.id})">Change</a>
                 <a href="#" class="btn btn-danger" onclick="remove(${el.id})">Delete</a>
@@ -122,7 +122,7 @@ function getTodo () {
               <div class="card-body">
                 <h5 class="card-title">${el.title}</h5>
                 <p class="card-text">${el.description}</p>
-                <input type="checkbox" check="" id="status-138" onclick="changeStatus(${el.id}, 'unfinished')"> Waiting todo
+                <input type="checkbox" check="" id="status" onclick="changeStatus(${el.id})"> Waiting todo
                 <p class="card-text">${el.due_date.split("T")[0]}</p>
                 <a href="#" class="btn btn-primary" onclick="findTodo(${el.id})">Change</a>
                 <a href="#" class="btn btn-danger" onclick="remove(${el.id})">Delete</a>
@@ -143,7 +143,7 @@ function create () {
   const description = $('#description').val()
   const due_date = $('#due_date').val()
   const status = $('#status').prop('checked')
-  console.log(title, description, due_date, status)
+  console.log(status)
   $.ajax({
     url: server_url + '/todos',
     method: 'post',
@@ -205,7 +205,11 @@ function findTodo (id) {
       $('#edit_title').val(data.title)
       $('#edit_description').val(data.description)
       $('#edit_due_date').val(data.due_date.split("T")[0])
-      $('#edit_status').val(data.status)
+      if (data.status) {
+        $('#edit_status').prop('checked')
+      } else {
+        $('#edit_status').prop('check')
+      }
       $('#submitUpdate').data("id", data.id)
     })
     .fail((err) => {
@@ -219,7 +223,7 @@ function update (id) {
   const title = $('#edit_title').val()
   const description = $('#edit_description').val()
   const due_date = $('#edit_due_date').val()
-  const status = $('#edit_status').val()
+  
   $.ajax({
     url: server_url + '/todos/' + id,
     method: 'put',
@@ -291,6 +295,13 @@ function onSignIn(googleUser) {
       console.log(err)
     })
 }
+function changeStatus(id) {
+  const status = $("#status")
+}
+$("#status").on('click', (event) => {
+  event.preventDefault()
+
+})
 
 $(document).ready(() => {
   auth()
